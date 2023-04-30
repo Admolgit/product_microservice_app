@@ -16,7 +16,8 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('greet') 
+  @Get('greet')
+  
   async greet(): Promise<string> {
     return 'Greetings authenticated user';
   }

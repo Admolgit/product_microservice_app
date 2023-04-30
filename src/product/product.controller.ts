@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Inject, Param, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { AuthGuard } from 'src/user/guards/auth.guards';
 // import { EventPattern } from '@nestjs/microservices';
@@ -6,11 +16,12 @@ import { ProductService } from './product.service';
 
 @Controller('product')
 export class ProductController {
-  constructor(private productService: ProductService,
-    @Inject("AUTH_SERVICE") private readonly client: ClientProxy
-    ) {}
+  constructor(
+    private productService: ProductService,
+    @Inject('AUTH_SERVICE') private readonly client: ClientProxy,
+  ) {}
 
-  // @UseGuards(LocalAuthGuard)
+  @UseGuards(AuthGuard)
   @Post()
   async create(
     @Body('name') name: string,
@@ -18,7 +29,6 @@ export class ProductController {
     @Body('price') price: number,
     @Body('quantity') quantity: number,
   ) {
-
     const product = await this.productService.create({
       name,
       description,
@@ -26,7 +36,12 @@ export class ProductController {
       quantity,
     });
 
-    this.client.emit('product_created', product);
+    this.client.emit(
+      { cmd: 'product_created' },
+      {
+        ...product,
+      },
+    );
 
     return product;
   }
@@ -35,18 +50,20 @@ export class ProductController {
   async getProductById(@Param('id') id: number) {
     const product = await this.productService.getProductById(id);
 
-    this.client.send('product1', product);
+    // this.client.emit({cmd: 'product1'}, {
+    //   ...product
+    // });
 
     return product;
   }
-  
-  @UseGuards(AuthGuard)
+
+  // @UseGuards(AuthGuard)
   @Get()
   async getAllProducts() {
-    console.log('Getting all products')
+    console.log('Getting all products');
     const product = await this.productService.getAllProducts();
 
-    this.client.emit('product_all', product);
+    // this.client.emit('product_all', product);
 
     return product;
   }
@@ -65,11 +82,15 @@ export class ProductController {
       price: price,
       quantity: quantity,
     };
-   await this.productService.updateProductById(id, data);
+    await this.productService.updateProductById(id, data);
 
-   const product = this.productService.get(id);
+    const product = this.productService.get(id);
 
-   this.client.emit('product_updated', product);
+    product.then(dat => this.client.emit('products_updated',
+    {
+      ...dat,
+    },
+  ));
 
     return product;
   }
@@ -78,7 +99,18 @@ export class ProductController {
   async deleteProductById(@Param('id') id: number) {
     const product = await this.productService.deleteProductById(id);
 
-    // this.client.emit('product_deleted', product.id);
+    const prod = this.productService.delete(id)
+
+    console.log(product, 'PRODUCER', prod, 'PRODUCERID')
+
+    // prod.then(data => console.log(data))
+
+    this.client.emit(
+      { cmd: 'products_deleted' },
+      {
+        id,
+      },
+    );
 
     return product;
   }

@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { InsertResult, Repository } from 'typeorm';
-import { FindConditions } from './findOperation';
 // import { FindConditions } from './findOperation';
 import { User } from './user.entity';
 
@@ -13,7 +12,7 @@ export class UserService {
   ) {}
 
   findOne(data: any): { data: string; } | any {
-    return data
+    return data;
   }
 
   async createUser(user: any): Promise<InsertResult> {

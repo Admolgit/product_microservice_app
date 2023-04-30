@@ -5,6 +5,7 @@ import { Product } from './product.entity';
 
 @Injectable()
 export class ProductService {
+  
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
@@ -14,6 +15,10 @@ export class ProductService {
     return this.productRepository.findOne({
       where: { id: id },
     });
+  }
+
+  delete(id: number) {
+    return this.productRepository.delete({ id })
   }
 
   async create(data: any): Promise<Product> {
@@ -37,10 +42,4 @@ export class ProductService {
   async deleteProductById(id: number): Promise<any> {
     return this.productRepository.delete(id);
   }
-
-  // async hello(data: any): Promise<any> {
-  //   const { token, user} = data
-  //   console.log(token, user, "PRODUCT_SERVICE");
-  //   return token
-  // }
 }

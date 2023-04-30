@@ -19,7 +19,8 @@ import { UserModule } from './user/user.module';
       synchronize: true,
     }),
     ProductModule,
-    UserModule],
+    UserModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -10,6 +10,7 @@ import { ProductService } from 'src/product/product.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
+    
     ClientsModule.register([
       {
         name: 'AUTH_SERVICE',
@@ -27,5 +28,6 @@ import { ProductService } from 'src/product/product.service';
   ],
   providers: [UserService],
   controllers: [UserController],
+  exports: [UserService],
 })
 export class UserModule {}
