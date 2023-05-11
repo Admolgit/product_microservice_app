@@ -15,9 +15,8 @@ export class UserController {
     return this.userService.findOne({ username: data.username });
   }
 
-  @UseGuards(AuthGuard)
   @Get('greet')
-  
+  // @UseGuards(AuthGuard)
   async greet(): Promise<string> {
     return 'Greetings authenticated user';
   }
