@@ -21,6 +21,8 @@ import { ProductService } from './product.service';
           queueOptions: {
             durable: false,
           },
+          noAck: false,
+          prefetchCount: 1,
         },
       },
     ]),

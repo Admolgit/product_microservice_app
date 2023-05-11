@@ -21,8 +21,9 @@ export class ProductController {
     @Inject('AUTH_SERVICE') private readonly client: ClientProxy,
   ) {}
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @Post()
+  // @UseGuards(AuthGuard)
   async create(
     @Body('name') name: string,
     @Body('description') description: string,
@@ -114,11 +115,4 @@ export class ProductController {
 
     return product;
   }
-
-  // @EventPattern('login')
-  // async hello(data: any): Promise<{data: string}> {
-  //   const { token, user } = data
-  //   console.log(token, user, "PRODUCT_CONTROLLER")
-  //   return data;
-  // }
 }
